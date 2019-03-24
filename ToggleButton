@@ -7,7 +7,7 @@ QtGui.QColor(105, 110, 117)
 
 class ToggleButton(QtWidgets.QWidget):
     clicked = QtCore.Signal(int)
-    def __init__(self, buttonSize=25):
+    def __init__(self, buttonSize=25, innerSize = 5):
         super(ToggleButton, self).__init__()
         self.onColour = QtGui.QBrush(QtGui.QColor(111, 255, 4))
         self.offColour = QtGui.QBrush(QtGui.QColor(242, 46, 17))
@@ -15,7 +15,8 @@ class ToggleButton(QtWidgets.QWidget):
         self.x = self.y = self.buttonSize
         self.setMaximumSize(self.buttonSize*2,  self.buttonSize*2)
         self.setMinimumSize(self.buttonSize*2,  self.buttonSize*2)
-        self.center = QtCore.QPointF(self.x, self.y) 
+        self.center = QtCore.QPointF(self.x, self.y)
+        self.innerSize = innerSize
     
     def mousePressEvent(self, event):
         self.clicked.emit(0)
@@ -36,17 +37,17 @@ class ToggleButton(QtWidgets.QWidget):
         
         painter.setBrush(QtGui.QBrush(QtCore.Qt.white)) 
         painter.setPen(QtGui.QPen(QtCore.Qt.darkGray, 0.1, QtCore.Qt.SolidLine))
-        painter.drawEllipse(self.center, self.buttonSize-10, self.buttonSize-10)
+        painter.drawEllipse(self.center, self.buttonSize-self.innerSize, self.buttonSize-self.innerSize)
         
         painter.setBrush(QtGui.QBrush(QtCore.Qt.darkGray)) 
         painter.setPen(QtGui.QPen(QtCore.Qt.darkGray, 0.1, QtCore.Qt.SolidLine))
-        painter.drawEllipse(self.center, self.buttonSize-11, self.buttonSize-11)
+        painter.drawEllipse(self.center, self.buttonSize-(self.innerSize+1), self.buttonSize-(self.innerSize+1))
  
         baseButtonGradient.setColorAt(0.0, outerColour)
         baseButtonGradient.setColorAt(1.0, BaseColour)
         painter.setBrush(QtGui.QBrush(baseButtonGradient)) 
         painter.setPen(QtGui.QPen(QtCore.Qt.darkGray, 0.1, QtCore.Qt.SolidLine))
-        painter.drawEllipse(self.center, self.buttonSize-15, self.buttonSize-15)
+        painter.drawEllipse(self.center, self.buttonSize-(self.innerSize+5), self.buttonSize-(self.innerSize+5))
 
             
 b = ToggleButton()
