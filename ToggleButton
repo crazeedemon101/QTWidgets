@@ -7,19 +7,30 @@ QtGui.QColor(105, 110, 117)
 
 class ToggleButton(QtWidgets.QWidget):
     clicked = QtCore.Signal(int)
-    def __init__(self, buttonSize=25, innerSize = 5):
+    def __init__(self, buttonSize=50, innerSize = 15):
         super(ToggleButton, self).__init__()
-        self.onColour = QtGui.QBrush(QtGui.QColor(111, 255, 4))
-        self.offColour = QtGui.QBrush(QtGui.QColor(242, 46, 17))
+        self.middleTopColour = QtGui.QColor(145, 145, 145)
+        self.middleBotColour = QtGui.QColor(255, 255, 255)
         self.buttonSize = buttonSize
         self.x = self.y = self.buttonSize
         self.setMaximumSize(self.buttonSize*2,  self.buttonSize*2)
         self.setMinimumSize(self.buttonSize*2,  self.buttonSize*2)
         self.center = QtCore.QPointF(self.x, self.y)
         self.innerSize = innerSize
+        self.state=False
     
     def mousePressEvent(self, event):
-        self.clicked.emit(0)
+        if self.state:
+            self.state=False
+            self.middleTopColour = QtGui.QColor(145, 145, 145)
+            self.middleBotColour = QtGui.QColor(255, 255, 255)
+            self.repaint()
+        else:
+            self.state=True
+            self.middleTopColour = QtGui.QColor(111, 255, 4)
+            self.middleBotColour = QtGui.QColor(111, 255, 4)
+            self.repaint()
+        self.clicked.emit(self.state)
     
     def paintEvent(self, event):
         BaseColour = QtGui.QColor(255, 255, 255)
@@ -43,12 +54,11 @@ class ToggleButton(QtWidgets.QWidget):
         painter.setPen(QtGui.QPen(QtCore.Qt.darkGray, 0.1, QtCore.Qt.SolidLine))
         painter.drawEllipse(self.center, self.buttonSize-(self.innerSize+1), self.buttonSize-(self.innerSize+1))
  
-        baseButtonGradient.setColorAt(0.0, outerColour)
-        baseButtonGradient.setColorAt(1.0, BaseColour)
+        baseButtonGradient.setColorAt(0.0, self.middleTopColour)
+        baseButtonGradient.setColorAt(1.0, self.middleBotColour)
         painter.setBrush(QtGui.QBrush(baseButtonGradient)) 
         painter.setPen(QtGui.QPen(QtCore.Qt.darkGray, 0.1, QtCore.Qt.SolidLine))
-        painter.drawEllipse(self.center, self.buttonSize-(self.innerSize+5), self.buttonSize-(self.innerSize+5))
-
+        painter.drawEllipse(self.center, self.buttonSize-(self.innerSize+5), self.buttonSize-(self.innerSize+5)
             
 b = ToggleButton()
 b.show()
